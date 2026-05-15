@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hall Booking Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: #8a6d2f;
+    --dark: #0f0e0b;
+    --dark2: #1a1813;
+    --dark3: #252219;
+    --dark4: #302d22;
+    --cream: #f5f0e8;
+    --cream2: #e8e0cc;
+    --red: #c0392b;
+    --green: #27ae60;
+    --orange: #e67e22;
+    --radius: 14px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--dark2) 0%, var(--dark3) 100%);
+    border-bottom: 2px solid var(--gold-dim);
+    padding: 20px 24px 0;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-top { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .logo-icon {
+    width:44px; height:44px; border-radius:10px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex-shrink:0;
+  }
+  .header-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 4vw, 24px);
+    color: var(--gold-light);
+    line-height:1.1;
+  }
+  .header-title p { font-size:12px; color:#888; margin-top:2px; }
+
+  /* TABS */
+  .tabs {
+    display:flex; gap:4px; overflow-x:auto;
+    padding-bottom:0; scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab {
+    padding:10px 18px; border:none; background:transparent;
+    color:#888; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500;
+    cursor:pointer; border-bottom:3px solid transparent;
+    white-space:nowrap; transition:all 0.2s; flex-shrink:0;
+  }
+  .tab.active { color:var(--gold-light); border-bottom-color:var(--gold); }
+  .tab:hover:not(.active) { color:var(--cream2); }
+
+  /* MAIN */
+  .main { padding:20px 16px; max-width:520px; margin:0 auto; }
+
+  /* PANELS */
+  .panel { display:none; }
+  .panel.active { display:block; }
+
+  /* CARDS */
+  .card {
+    background: var(--dark2);
+    border: 1px solid var(--dark4);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; color: var(--gold-light);
+    margin-bottom: 14px;
+    display:flex; align-items:center; gap:8px;
+  }
+
+  /* INPUTS */
+  .form-group { margin-bottom:14px; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  label { display:block; font-size:12px; color:#888; margin-bottom:5px; font-weight:500; text-transform:uppercase; letter-spacing:.5px; }
+  input, select, textarea {
+    width:100%; padding:11px 14px;
+    background: var(--dark3); border: 1px solid var(--dark4);
+    border-radius:10px; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:14px;
+    outline:none; transition:border 0.2s;
+  }
+  input:focus, select:focus, textarea:focus { border-color:var(--gold-dim); }
+  input[type=date]::-webkit-calendar-picker-indicator { filter:invert(.7); }
+  select option { background:var(--dark3); }
+
+  /* BUTTONS */
+  .btn {
+    padding:12px 20px; border:none; border-radius:10px;
+    font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+    cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+    color: var(--dark); width:100%;
+  }
+  .btn-gold:hover { filter:brightness(1.1); }
+  .btn-sm { padding:7px 12px; font-size:12px; border-radius:8px; }
+  .btn-ghost { background:var(--dark3); color:var(--cream2); border:1px solid var(--dark4); }
+  .btn-ghost:hover { border-color:var(--gold-dim); color:var(--gold-light); }
+  .btn-danger { background:#c0392b22; color:#e74c3c; border:1px solid #c0392b44; }
+  .btn-danger:hover { background:#c0392b44; }
+  .btn-success { background:#27ae6022; color:#2ecc71; border:1px solid #27ae6044; }
+  .btn-success:hover { background:#27ae6044; }
+
+  /* STATUS BADGE */
+  .badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600;
+  }
+  .badge-free { background:#27ae6020; color:#2ecc71; border:1px solid #27ae6040; }
+  .badge-booked { background:#c0392b20; color:#e74c3c; border:1px solid #c0392b40; }
+  .badge-paid { background:#27ae6020; color:#2ecc71; border:1px solid #27ae6040; }
+  .badge-partial { background:#e67e2220; color:#f39c12; border:1px solid #e67e2240; }
+  .badge-unpaid { background:#c0392b20; color:#e74c3c; border:1px solid #c0392b40; }
+
+  /* AVAILABILITY RESULT */
+  .avail-result {
+    border-radius:var(--radius); padding:20px; text-align:center;
+    margin-top:16px; display:none;
+  }
+  .avail-result.free { background:#27ae6015; border:1.5px solid #27ae6050; }
+  .avail-result.booked { background:#c0392b15; border:1.5px solid #c0392b50; }
+  .avail-result .icon { font-size:36px; margin-bottom:8px; }
+  .avail-result .status-text { font-family:'Playfair Display',serif; font-size:20px; }
+  .avail-result .detail { font-size:13px; color:#aaa; margin-top:6px; line-height:1.6; }
+
+  /* BOOKING LIST */
+  .booking-item {
+    background:var(--dark3); border:1px solid var(--dark4);
+    border-radius:12px; padding:15px; margin-bottom:10px;
+  }
+  .booking-item-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .booking-name { font-weight:600; font-size:15px; color:var(--cream); }
+  .booking-event { font-size:12px; color:#888; margin-top:2px; }
+  .booking-date { font-size:12px; color:var(--gold); font-weight:600; text-align:right; flex-shrink:0; }
+  .booking-footer { display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--dark4); }
+  .amount-info { font-size:13px; }
+  .amount-due { color:#e74c3c; font-weight:600; }
+  .amount-paid { color:#2ecc71; }
+  .booking-actions { display:flex; gap:6px; }
+
+  /* PAYMENT SUMMARY */
+  .stat-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
+  .stat-box {
+    background:var(--dark3); border:1px solid var(--dark4);
+    border-radius:12px; padding:14px; text-align:center;
+  }
+  .stat-box .stat-val { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; }
+  .stat-box .stat-label { font-size:11px; color:#888; margin-top:3px; }
+  .stat-box.green .stat-val { color:#2ecc71; }
+  .stat-box.red .stat-val { color:#e74c3c; }
+  .stat-box.gold .stat-val { color:var(--gold-light); }
+
+  /* PROGRESS BAR */
+  .progress-bar { height:6px; background:var(--dark4); border-radius:3px; margin-top:8px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius:3px; transition:width .4s; }
+
+  /* MODAL */
+  .modal-overlay {
+    position:fixed; inset:0; background:#00000088; z-index:200;
+    display:none; align-items:center; justify-content:center; padding:16px;
+  }
+  .modal-overlay.open { display:flex; }
+  .modal {
+    background:var(--dark2); border:1px solid var(--dark4);
+    border-radius:var(--radius); padding:22px; width:100%; max-width:380px;
+  }
+  .modal-title { font-family:'Playfair Display',serif; color:var(--gold-light); font-size:17px; margin-bottom:16px; }
+  .modal-actions { display:flex; gap:10px; margin-top:18px; }
+  .modal-actions .btn { flex:1; }
+
+  /* TOAST */
+  .toast {
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+    background:var(--dark3); border:1px solid var(--gold-dim);
+    color:var(--cream); padding:12px 22px; border-radius:30px;
+    font-size:14px; font-weight:500; z-index:300;
+    transition:transform .3s; white-space:nowrap;
+  }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* EMPTY STATE */
+  .empty { text-align:center; padding:40px 20px; color:#555; }
+  .empty .empty-icon { font-size:40px; margin-bottom:12px; }
+  .empty p { font-size:14px; }
+
+  /* SECTION DIVIDER */
+  .section-label {
+    font-size:11px; color:var(--gold-dim); text-transform:uppercase;
+    letter-spacing:1.5px; font-weight:600; margin:18px 0 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo-icon">🏛️</div>
+    <div class="header-title">
+      <h1>Party Hall Manager</h1>
+      <p>Bookings · Payments · Availability</p>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('check')">🔍 Check Date</button>
+    <button class="tab" onclick="switchTab('bookings')">📋 All Bookings</button>
+    <button class="tab" onclick="switchTab('payments')">💰 Payments</button>
+    <button class="tab" onclick="switchTab('add')">➕ Add Booking</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CHECK TAB -->
+  <div class="panel active" id="panel-check">
+    <div class="card">
+      <div class="card-title">📅 Check Hall Availability</div>
+      <div class="form-group">
+        <label>Select Date</label>
+        <input type="date" id="checkDate" oninput="checkAvailability()">
+      </div>
+    </div>
+    <div class="avail-result" id="availResult"></div>
+  </div>
+
+  <!-- BOOKINGS TAB -->
+  <div class="panel" id="panel-bookings">
+    <div class="card" style="padding:14px 18px">
+      <input type="text" id="searchBox" placeholder="🔍  Search by name or event…" oninput="renderBookings()" style="background:var(--dark3);">
+    </div>
+    <div id="bookingsList"></div>
+  </div>
+
+  <!-- PAYMENTS TAB -->
+  <div class="panel" id="panel-payments">
+    <div class="stat-grid" id="statsGrid"></div>
+    <div id="paymentsList"></div>
+  </div>
+
+  <!-- ADD TAB -->
+  <div class="panel" id="panel-add">
+    <div class="card">
+      <div class="card-title">✨ New Booking</div>
+      <div class="form-group">
+        <label>Customer Name *</label>
+        <input type="text" id="addName" placeholder="e.g. Ravi Kumar">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="addPhone" placeholder="e.g. 9876543210">
+      </div>
+      <div class="form-group">
+        <label>Event Type *</label>
+        <select id="addEvent">
+          <option value="">-- Select event --</option>
+          <option>Wedding Reception</option>
+          <option>Birthday Party</option>
+          <option>Engagement</option>
+          <option>Anniversary</option>
+          <option>Corporate Event</option>
+          <option>Baby Shower</option>
+          <option>Naming Ceremony</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Event Date *</label>
+          <input type="date" id="addDate">
+        </div>
+        <div class="form-group">
+          <label>End Date (optional)</label>
+          <input type="date" id="addEndDate">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Total Hall Charge (₹) *</label>
+          <input type="number" id="addTotal" placeholder="e.g. 50000" min="0">
+        </div>
+        <div class="form-group">
+          <label>Advance Paid (₹)</label>
+          <input type="number" id="addAdvance" placeholder="e.g. 20000" min="0" value="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes (optional)</label>
+        <textarea id="addNotes" rows="2" placeholder="Any special requirements…"></textarea>
+      </div>
+      <button class="btn btn-gold" onclick="addBooking()">✅ Confirm Booking</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- EDIT PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-title">💳 Update Payment</div>
+    <div id="payModalInfo" style="font-size:13px; color:#aaa; margin-bottom:12px;"></div>
+    <div class="form-group">
+      <label>Add Payment Amount (₹)</label>
+      <input type="number" id="payAmount" placeholder="Amount received now" min="0">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-success" onclick="savePayment()">Save Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="delModal">
+  <div class="modal">
+    <div class="modal-title">🗑️ Delete Booking</div>
+    <p style="font-size:14px; color:#aaa;">Are you sure you want to delete this booking? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const STORE_KEY = 'hallBookings_v2';
+let bookings = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+let editingId = null;
+
+function save() { localStorage.setItem(STORE_KEY, JSON.stringify(bookings)); }
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function fmtDate(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function fmtMoney(n) { return '₹' + Number(n||0).toLocaleString('en-IN'); }
+
+function payStatus(b) {
+  const due = (b.total||0) - (b.paid||0);
+  if (due <= 0) return 'paid';
+  if ((b.paid||0) > 0) return 'partial';
+  return 'unpaid';
+}
+
+function payLabel(b) {
+  const s = payStatus(b);
+  const labels = { paid:'Fully Paid', partial:'Partial', unpaid:'Unpaid' };
+  return labels[s];
+}
+
+/* ---- TABS ---- */
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['check','bookings','payments','add'][i]===t));
+  document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  if (t==='bookings') renderBookings();
+  if (t==='payments') renderPayments();
+}
+
+/* ---- CHECK AVAILABILITY ---- */
+function checkAvailability() {
+  const date = document.getElementById('checkDate').value;
+  const el = document.getElementById('availResult');
+  if (!date) { el.style.display='none'; return; }
+  el.style.display='block';
+
+  const hits = bookings.filter(b => {
+    const end = b.endDate || b.date;
+    return date >= b.date && date <= end;
+  });
+
+  if (hits.length === 0) {
+    el.className = 'avail-result free';
+    el.innerHTML = `<div class="icon">✅</div>
+      <div class="status-text" style="color:#2ecc71">Hall is Available!</div>
+      <div class="detail">${fmtDate(date)} is free.<br>You can take a new booking.</div>`;
+  } else {
+    const b = hits[0];
+    const due = (b.total||0)-(b.paid||0);
+    const dueStr = due > 0 ? `<br><span style="color:#e74c3c;font-weight:600">Balance due: ${fmtMoney(due)}</span>` : `<br><span style="color:#2ecc71;font-weight:600">Fully paid ✓</span>`;
+    el.className = 'avail-result booked';
+    el.innerHTML = `<div class="icon">🚫</div>
+      <div class="status-text" style="color:#e74c3c">Hall is Booked!</div>
+      <div class="detail">
+        <strong style="color:var(--cream)">${b.name}</strong> — ${b.event}<br>
+        ${fmtDate(b.date)}${b.endDate && b.endDate!==b.date ? ' to '+fmtDate(b.endDate) : ''}
+        ${dueStr}
+        ${b.phone ? `<br>📞 ${b.phone}` : ''}
+      </div>`;
+  }
+}
+
+/* ---- RENDER BOOKINGS ---- */
+function renderBookings() {
+  const q = (document.getElementById('searchBox')?.value||'').toLowerCase();
+  const el = document.getElementById('bookingsList');
+  const list = bookings
+    .filter(b => !q || b.name.toLowerCase().includes(q) || b.event.toLowerCase().includes(q))
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><p>No bookings found</p></div>`;
+    return;
+  }
+
+  const now = new Date().toISOString().slice(0,10);
+  const upcoming = list.filter(b => (b.endDate||b.date) >= now);
+  const past = list.filter(b => (b.endDate||b.date) < now);
+
+  let html = '';
+  if (upcoming.length) { html += `<div class="section-label">Upcoming (${upcoming.length})</div>`; upcoming.forEach(b => html += bookingCard(b)); }
+  if (past.length) { html += `<div class="section-label">Past (${past.length})</div>`; past.forEach(b => html += bookingCard(b)); }
+  el.innerHTML = html;
+}
+
+function bookingCard(b) {
+  const due = (b.total||0)-(b.paid||0);
+  const ps = payStatus(b);
+  const badgeClass = 'badge-'+ps;
+  return `<div class="booking-item">
+    <div class="booking-item-header">
+      <div>
+        <div class="booking-name">${b.name}</div>
+        <div class="booking-event">${b.event}${b.phone ? ' · 📞 '+b.phone : ''}</div>
+      </div>
+      <div class="booking-date">${fmtDate(b.date)}${b.endDate&&b.endDate!==b.date?'<br>to '+fmtDate(b.endDate):''}</div>
+    </div>
+    <div class="booking-footer">
+      <div class="amount-info">
+        <span class="badge ${badgeClass}">${payLabel(b)}</span>
+        ${due>0 ? `<span class="amount-due" style="margin-left:8px">Due: ${fmtMoney(due)}</span>` : ''}
+      </div>
+      <div class="booking-actions">
+        <button class="btn btn-sm btn-ghost" onclick="openPayModal('${b.id}')">💳</button>
+        <button class="btn btn-sm btn-danger" onclick="openDelModal('${b.id}')">🗑️</button>
+      </div>
+    </div>
+    ${b.notes ? `<div style="font-size:12px;color:#666;margin-top:8px;padding-top:8px;border-top:1px solid var(--dark4)">📝 ${b.notes}</div>` : ''}
+  </div>`;
+}
+
+/* ---- RENDER PAYMENTS ---- */
+function renderPayments() {
+  const totalBilled = bookings.reduce((s,b)=>s+(b.total||0),0);
+  const totalPaid = bookings.reduce((s,b)=>s+(b.paid||0),0);
+  const totalDue = totalBilled - totalPaid;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-box gold"><div class="stat-val">${fmtMoney(totalBilled)}</div><div class="stat-label">Total Billed</div></div>
+    <div class="stat-box green"><div class="stat-val">${fmtMoney(totalPaid)}</div><div class="stat-label">Collected</div></div>
+    <div class="stat-box red"><div class="stat-val">${fmtMoney(totalDue)}</div><div class="stat-label">Pending</div></div>`;
+
+  const el = document.getElementById('paymentsList');
+  if (!bookings.length) { el.innerHTML=`<div class="empty"><div class="empty-icon">💰</div><p>No bookings yet</p></div>`; return; }
+
+  const sorted = [...bookings].sort((a,b)=>{ const da=(a.total||0)-(a.paid||0), db=(b.total||0)-(b.paid||0); return db-da; });
+  el.innerHTML = sorted.map(b => {
+    const pct = b.total>0 ? Math.min(100,Math.round((b.paid||0)/b.total*100)) : 100;
+    const due = (b.total||0)-(b.paid||0);
+    const ps = payStatus(b);
+    return `<div class="booking-item">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div>
+          <div class="booking-name">${b.name}</div>
+          <div class="booking-event">${b.event} · ${fmtDate(b.date)}</div>
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="openPayModal('${b.id}')">Update</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:10px">
+        <span class="amount-paid">Paid: ${fmtMoney(b.paid||0)}</span>
+        <span>Total: ${fmtMoney(b.total||0)}</span>
+        ${due>0 ? `<span class="amount-due">Due: ${fmtMoney(due)}</span>` : `<span style="color:#2ecc71">✓ Cleared</span>`}
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;color:#666;margin-top:5px;text-align:right">${pct}% paid</div>
+    </div>`;
+  }).join('');
+}
+
+/* ---- ADD BOOKING ---- */
+function addBooking() {
+  const name = document.getElementById('addName').value.trim();
+  const phone = document.getElementById('addPhone').value.trim();
+  const event = document.getElementById('addEvent').value;
+  const date = document.getElementById('addDate').value;
+  const endDate = document.getElementById('addEndDate').value;
+  const total = parseFloat(document.getElementById('addTotal').value)||0;
+  const paid = parseFloat(document.getElementById('addAdvance').value)||0;
+  const notes = document.getElementById('addNotes').value.trim();
+
+  if (!name || !event || !date || !total) { showToast('⚠️ Please fill all required fields'); return; }
+
+  // Check conflict
+  const conflict = bookings.find(b => {
+    const bEnd = b.endDate||b.date;
+    const newEnd = endDate||date;
+    return date <= bEnd && newEnd >= b.date;
+  });
+  if (conflict) { showToast(`⚠️ Date conflict with ${conflict.name}'s booking!`); return; }
+
+  if (paid > total) { showToast('⚠️ Advance cannot exceed total amount'); return; }
+
+  bookings.push({ id:uid(), name, phone, event, date, endDate:endDate||date, total, paid, notes });
+  save();
+  showToast('✅ Booking added successfully!');
+
+  // Reset
+  ['addName','addPhone','addDate','addEndDate','addTotal','addNotes'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('addAdvance').value='0';
+  document.getElementById('addEvent').value='';
+}
+
+/* ---- PAYMENT MODAL ---- */
+function openPayModal(id) {
+  editingId = id;
+  const b = bookings.find(x=>x.id===id);
+  if (!b) return;
+  const due = (b.total||0)-(b.paid||0);
+  document.getElementById('payModalInfo').innerHTML =
+    `<strong>${b.name}</strong> — ${b.event}<br>Total: ${fmtMoney(b.total)} | Paid: ${fmtMoney(b.paid||0)} | <span class="amount-due">Due: ${fmtMoney(due)}</span>`;
+  document.getElementById('payAmount').value = '';
+  document.getElementById('payModal').classList.add('open');
+}
+
+function savePayment() {
+  const b = bookings.find(x=>x.id===editingId);
+  if (!b) return;
+  const amt = parseFloat(document.getElementById('payAmount').value)||0;
+  if (amt <= 0) { showToast('⚠️ Enter a valid amount'); return; }
+  const due = (b.total||0)-(b.paid||0);
+  if (amt > due) { showToast(`⚠️ Amount exceeds due balance of ${fmtMoney(due)}`); return; }
+  b.paid = (b.paid||0) + amt;
+  save(); closeModal();
+  showToast(`✅ ${fmtMoney(amt)} payment recorded!`);
+  if (document.getElementById('panel-payments').classList.contains('active')) renderPayments();
+  if (document.getElementById('panel-bookings').classList.contains('active')) renderBookings();
+}
+
+/* ---- DELETE MODAL ---- */
+function openDelModal(id) {
+  editingId = id;
+  document.getElementById('delModal').classList.add('open');
+}
+
+function confirmDelete() {
+  bookings = bookings.filter(b=>b.id!==editingId);
+  save(); closeModal();
+  showToast('🗑️ Booking deleted');
+  renderBookings();
+}
+
+function closeModal() {
+  document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));
+}
+
+/* ---- TOAST ---- */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// Set today as default check date
+document.getElementById('checkDate').value = new Date().toISOString().slice(0,10);
+checkAvailability();
+</script>
+</body>
+</html>
