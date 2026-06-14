@@ -91,7 +91,8 @@
   /* INPUTS */
   .form-group { margin-bottom:14px; }
   .form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  label { display:block; font-size:12px; color:#888; margin-bottom:5px; font-weight:500; text-transform:uppercase; letter-spacing:.5px; }
+  .label-wrap { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+  label { font-size:12px; color:#888; font-weight:500; text-transform:uppercase; letter-spacing:.5px; }
   input, select, textarea {
     width:100%; padding:11px 14px;
     background: var(--dark3); border: 1px solid var(--dark4);
@@ -122,6 +123,22 @@
   .btn-success:hover { background:#27ae6044; }
   .btn-wa { background:#25D36622; color:#25D366; border:1px solid #25D36644; }
   .btn-wa:hover { background:#25D36644; }
+  
+  /* MIC BUTTON */
+  .mic-btn {
+    background: #c9a84c22; color: var(--gold-light); 
+    border: 1px solid #c9a84c44; border-radius: 6px;
+    padding: 2px 8px; font-size: 14px; cursor: pointer;
+    transition: all 0.2s; display: inline-flex; align-items: center;
+  }
+  .mic-btn:hover { background: #c9a84c44; transform: scale(1.05); }
+  .mic-btn.listening { background: #e74c3c; color: white; border-color: #e74c3c; animation: pulse 1.5s infinite; }
+  
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+  }
 
   /* STATUS BADGE */
   .badge {
@@ -245,8 +262,9 @@
   </div>
 
   <div class="panel" id="panel-bookings">
-    <div class="card" style="padding:14px 18px">
-      <input type="text" id="searchBox" placeholder="🔍  Search by name or event…" oninput="renderBookings()" style="background:var(--dark3);">
+    <div class="card" style="padding:14px 18px; display:flex; gap:10px;">
+      <input type="text" id="searchBox" placeholder="🔍 Search by name or event…" oninput="renderBookings()" style="background:var(--dark3); flex:1;">
+      <button class="mic-btn" id="mic-searchBox" onclick="startDictation('searchBox')" title="Voice Search">🎤</button>
     </div>
     <div id="bookingsList"></div>
   </div>
@@ -259,16 +277,26 @@
   <div class="panel" id="panel-add">
     <div class="card">
       <div class="card-title">✨ New Booking</div>
+      
       <div class="form-group">
-        <label>Customer Name *</label>
+        <div class="label-wrap">
+          <label>Customer Name *</label>
+          <button class="mic-btn" id="mic-addName" onclick="startDictation('addName')" title="Voice Type">🎤</button>
+        </div>
         <input type="text" id="addName" placeholder="e.g. Ravi Kumar">
       </div>
+      
       <div class="form-group">
-        <label>WhatsApp Number (10 digits)</label>
+        <div class="label-wrap">
+          <label>WhatsApp Number (10 digits)</label>
+        </div>
         <input type="tel" id="addPhone" placeholder="e.g. 9876543210">
       </div>
+      
       <div class="form-group">
-        <label>Event Type *</label>
+        <div class="label-wrap">
+          <label>Event Type *</label>
+        </div>
         <select id="addEvent">
           <option value="">-- Select event --</option>
           <option>Wedding Reception</option>
@@ -281,31 +309,38 @@
           <option>Other</option>
         </select>
       </div>
+      
       <div class="form-row">
         <div class="form-group">
-          <label>Event Date *</label>
+          <div class="label-wrap"><label>Event Date *</label></div>
           <input type="date" id="addDate">
         </div>
         <div class="form-group">
-          <label>End Date (optional)</label>
+          <div class="label-wrap"><label>End Date (optional)</label></div>
           <input type="date" id="addEndDate">
         </div>
       </div>
+      
       <div class="form-row">
         <div class="form-group">
-          <label>Total Hall Charge (₹) *</label>
+          <div class="label-wrap"><label>Total Hall Charge (₹) *</label></div>
           <input type="number" id="addTotal" placeholder="e.g. 50000" min="0">
         </div>
         <div class="form-group">
-          <label>Advance Paid (₹)</label>
+          <div class="label-wrap"><label>Advance Paid (₹)</label></div>
           <input type="number" id="addAdvance" placeholder="e.g. 20000" min="0" value="0">
         </div>
       </div>
+      
       <div class="form-group">
-        <label>Notes (optional)</label>
+        <div class="label-wrap">
+          <label>Notes (optional)</label>
+          <button class="mic-btn" id="mic-addNotes" onclick="startDictation('addNotes')" title="Voice Type">🎤</button>
+        </div>
         <textarea id="addNotes" rows="2" placeholder="Any special requirements…"></textarea>
       </div>
-      <button class="btn btn-gold" onclick="addBooking()">✅ Confirm Booking</button>
+      
+      <button class="btn btn-gold" onclick="addBooking()" style="margin-top:10px;">✅ Confirm Booking</button>
     </div>
   </div>
 
@@ -388,6 +423,65 @@ function payLabel(b) {
   const s = payStatus(b);
   const labels = { paid:'Fully Paid', partial:'Partial', unpaid:'Unpaid' };
   return labels[s];
+}
+
+/* ---- VOICE DICTATION (SPEECH TO TEXT) ---- */
+function startDictation(targetId) {
+  // Check if browser supports speech recognition
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showToast('⚠️ Voice typing is not supported in this browser.');
+    return;
+  }
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  
+  // Optimized for Indian English accents/names
+  recognition.lang = 'en-IN'; 
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  const micBtn = document.getElementById('mic-' + targetId);
+  
+  recognition.onstart = function() {
+    micBtn.classList.add('listening');
+    showToast('🎙️ Listening... Speak now');
+  };
+
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const targetInput = document.getElementById(targetId);
+    
+    // If it's a text area (like Notes), add a space and append. Otherwise, replace.
+    if (targetInput.tagName.toLowerCase() === 'textarea' && targetInput.value.trim() !== '') {
+      targetInput.value = targetInput.value.trim() + ' ' + transcript;
+    } else {
+      targetInput.value = transcript;
+    }
+
+    // If searching, trigger the search automatically
+    if (targetId === 'searchBox') {
+      renderBookings();
+    }
+    
+    micBtn.classList.remove('listening');
+    showToast('✅ Text added!');
+  };
+
+  recognition.onerror = function(event) {
+    micBtn.classList.remove('listening');
+    if (event.error === 'not-allowed') {
+      showToast('⚠️ Please allow microphone access in your browser.');
+    } else {
+      showToast('⚠️ Voice recognition error. Try again.');
+    }
+  };
+
+  recognition.onend = function() {
+    micBtn.classList.remove('listening');
+  };
+
+  recognition.start();
 }
 
 /* ---- WHATSAPP INTEGRATION ---- */
