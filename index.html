@@ -393,9 +393,7 @@ function payLabel(b) {
 /* ---- WHATSAPP INTEGRATION ---- */
 function sendWhatsApp(phone, message) {
   if (!phone) return;
-  // Clean phone to just digits
   let cleanPhone = phone.replace(/\D/g, '');
-  // If it's a standard 10 digit Indian number, add +91 country code automatically
   if (cleanPhone.length === 10) {
     cleanPhone = '91' + cleanPhone;
   }
@@ -408,9 +406,16 @@ function sendReminder(id) {
   if(!b || !b.phone) return;
   const due = (b.total||0) - (b.paid||0);
   
-  let msg = `👋 Hello ${b.name},\n\nThis is regarding your booking for *${b.event}* on *${fmtDate(b.date)}*.\n\n`;
+  let msg = `👋 Hello ${b.name},
+
+This is regarding your booking for *${b.event}* on *${fmtDate(b.date)}*.
+
+`;
+
   if (due > 0) {
-    msg += `Just a friendly reminder that there is a pending balance of *${fmtMoney(due)}* out of the total ${fmtMoney(b.total)}.\n\nThank you!`;
+    msg += `Just a friendly reminder that there is a pending balance of *${fmtMoney(due)}* out of the total ${fmtMoney(b.total)}.
+
+Thank you!`;
   } else {
     msg += `Your booking is fully paid. We look forward to hosting your event!`;
   }
@@ -574,16 +579,25 @@ function addBooking() {
   save();
   showToast('✅ Booking added successfully!');
 
-  // Trigger WhatsApp popup if phone number was provided
   if (phone) {
     const due = total - paid;
-    let msg = `🎉 *Booking Confirmed!*\n\nHello ${name},\nYour booking for *${event}* on *${fmtDate(date)}* is confirmed.\n\n`;
-    msg += `💰 *Total Amount:* ${fmtMoney(total)}\n`;
-    msg += `✅ *Advance Paid:* ${fmtMoney(paid)}\n`;
+    let msg = `🎉 *Booking Confirmed!*
+
+Hello ${name},
+Your booking for *${event}* on *${fmtDate(date)}* is confirmed.
+
+💰 *Total Amount:* ${fmtMoney(total)}
+✅ *Advance Paid:* ${fmtMoney(paid)}
+`;
+
     if (due > 0) {
-      msg += `⏳ *Balance Due:* ${fmtMoney(due)}\n\nThank you!`;
+      msg += `⏳ *Balance Due:* ${fmtMoney(due)}
+
+Thank you!`;
     } else {
-      msg += `✨ *Fully Paid!*\n\nThank you!`;
+      msg += `✨ *Fully Paid!*
+
+Thank you!`;
     }
     
     setTimeout(() => {
@@ -624,15 +638,24 @@ function savePayment() {
   if (document.getElementById('panel-payments').classList.contains('active')) renderPayments();
   if (document.getElementById('panel-bookings').classList.contains('active')) renderBookings();
 
-  // Trigger WhatsApp popup if phone number exists
   if (b.phone) {
     const newDue = (b.total||0) - (b.paid||0);
-    let msg = `💳 *Payment Received!*\n\nHello ${b.name},\nWe have received your payment of *${fmtMoney(amt)}* for the ${b.event}.\n\n`;
-    msg += `✅ *Total Paid so far:* ${fmtMoney(b.paid)}\n`;
+    let msg = `💳 *Payment Received!*
+
+Hello ${b.name},
+We have received your payment of *${fmtMoney(amt)}* for the ${b.event}.
+
+✅ *Total Paid so far:* ${fmtMoney(b.paid)}
+`;
+
     if (newDue > 0) {
-      msg += `⏳ *Balance Due:* ${fmtMoney(newDue)}\\n\nThank you!`;
+      msg += `⏳ *Balance Due:* ${fmtMoney(newDue)}
+
+Thank you!`;
     } else {
-      msg += `✨ *Your account is Fully Paid!*\n\nThank you!`;
+      msg += `✨ *Your account is Fully Paid!*
+
+Thank you!`;
     }
     
     setTimeout(() => {
