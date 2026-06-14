@@ -106,7 +106,7 @@
   .btn {
     padding:12px 20px; border:none; border-radius:10px;
     font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
-    cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px;
+    cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; justify-content:center;
   }
   .btn-gold {
     background: linear-gradient(135deg, var(--gold), var(--gold-dim));
@@ -120,6 +120,8 @@
   .btn-danger:hover { background:#c0392b44; }
   .btn-success { background:#27ae6022; color:#2ecc71; border:1px solid #27ae6044; }
   .btn-success:hover { background:#27ae6044; }
+  .btn-wa { background:#25D36622; color:#25D366; border:1px solid #25D36644; }
+  .btn-wa:hover { background:#25D36644; }
 
   /* STATUS BADGE */
   .badge {
@@ -225,12 +227,12 @@
     <button class="tab" onclick="switchTab('bookings')">📋 All Bookings</button>
     <button class="tab" onclick="switchTab('payments')">💰 Payments</button>
     <button class="tab" onclick="switchTab('add')">➕ Add Booking</button>
+    <button class="tab" onclick="switchTab('data')">⚙️ Data</button>
   </div>
 </div>
 
 <div class="main">
 
-  <!-- CHECK TAB -->
   <div class="panel active" id="panel-check">
     <div class="card">
       <div class="card-title">📅 Check Hall Availability</div>
@@ -242,7 +244,6 @@
     <div class="avail-result" id="availResult"></div>
   </div>
 
-  <!-- BOOKINGS TAB -->
   <div class="panel" id="panel-bookings">
     <div class="card" style="padding:14px 18px">
       <input type="text" id="searchBox" placeholder="🔍  Search by name or event…" oninput="renderBookings()" style="background:var(--dark3);">
@@ -250,13 +251,11 @@
     <div id="bookingsList"></div>
   </div>
 
-  <!-- PAYMENTS TAB -->
   <div class="panel" id="panel-payments">
     <div class="stat-grid" id="statsGrid"></div>
     <div id="paymentsList"></div>
   </div>
 
-  <!-- ADD TAB -->
   <div class="panel" id="panel-add">
     <div class="card">
       <div class="card-title">✨ New Booking</div>
@@ -265,7 +264,7 @@
         <input type="text" id="addName" placeholder="e.g. Ravi Kumar">
       </div>
       <div class="form-group">
-        <label>Phone Number</label>
+        <label>WhatsApp Number (10 digits)</label>
         <input type="tel" id="addPhone" placeholder="e.g. 9876543210">
       </div>
       <div class="form-group">
@@ -310,9 +309,28 @@
     </div>
   </div>
 
+  <div class="panel" id="panel-data">
+    <div class="card">
+      <div class="card-title">💾 Backup & Restore Data</div>
+      <p style="font-size:13px; color:#aaa; margin-bottom:16px; line-height:1.5;">
+        Save your customer data to your device, or load an existing backup. Use this before updating the app to ensure no data is lost.
+      </p>
+      
+      <div class="form-group">
+        <button class="btn btn-ghost" onclick="exportData()" style="width:100%; margin-bottom:10px;">
+          📥 Download Backup File
+        </button>
+        
+        <label class="btn btn-ghost" style="width:100%; text-align:center; cursor:pointer;">
+          📤 Upload Backup File
+          <input type="file" accept=".json" style="display:none" onchange="importData(event)">
+        </label>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- EDIT PAYMENT MODAL -->
 <div class="modal-overlay" id="payModal">
   <div class="modal">
     <div class="modal-title">💳 Update Payment</div>
@@ -328,7 +346,6 @@
   </div>
 </div>
 
-<!-- DELETE CONFIRM MODAL -->
 <div class="modal-overlay" id="delModal">
   <div class="modal">
     <div class="modal-title">🗑️ Delete Booking</div>
@@ -340,7 +357,6 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -374,9 +390,37 @@ function payLabel(b) {
   return labels[s];
 }
 
+/* ---- WHATSAPP INTEGRATION ---- */
+function sendWhatsApp(phone, message) {
+  if (!phone) return;
+  // Clean phone to just digits
+  let cleanPhone = phone.replace(/\\D/g, '');
+  // If it's a standard 10 digit Indian number, add +91 country code automatically
+  if (cleanPhone.length === 10) {
+    cleanPhone = '91' + cleanPhone;
+  }
+  const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
+
+function sendReminder(id) {
+  const b = bookings.find(x=>x.id===id);
+  if(!b || !b.phone) return;
+  const due = (b.total||0) - (b.paid||0);
+  
+  let msg = `👋 Hello ${b.name},\\n\\nThis is regarding your booking for *${b.event}* on *${fmtDate(b.date)}*.\\n\\n`;
+  if (due > 0) {
+    msg += `Just a friendly reminder that there is a pending balance of *${fmtMoney(due)}* out of the total ${fmtMoney(b.total)}.\\n\\nThank you!`;
+  } else {
+    msg += `Your booking is fully paid. We look forward to hosting your event!`;
+  }
+  
+  sendWhatsApp(b.phone, msg);
+}
+
 /* ---- TABS ---- */
 function switchTab(t) {
-  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['check','bookings','payments','add'][i]===t));
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['check','bookings','payments','add','data'][i]===t));
   document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
   document.getElementById('panel-'+t).classList.add('active');
   if (t==='bookings') renderBookings();
@@ -457,6 +501,7 @@ function bookingCard(b) {
         ${due>0 ? `<span class="amount-due" style="margin-left:8px">Due: ${fmtMoney(due)}</span>` : ''}
       </div>
       <div class="booking-actions">
+        ${b.phone ? `<button class="btn btn-sm btn-wa" onclick="sendReminder('${b.id}')" title="Send WhatsApp Reminder">💬</button>` : ''}
         <button class="btn btn-sm btn-ghost" onclick="openPayModal('${b.id}')">💳</button>
         <button class="btn btn-sm btn-danger" onclick="openDelModal('${b.id}')">🗑️</button>
       </div>
@@ -516,7 +561,6 @@ function addBooking() {
 
   if (!name || !event || !date || !total) { showToast('⚠️ Please fill all required fields'); return; }
 
-  // Check conflict
   const conflict = bookings.find(b => {
     const bEnd = b.endDate||b.date;
     const newEnd = endDate||date;
@@ -530,7 +574,25 @@ function addBooking() {
   save();
   showToast('✅ Booking added successfully!');
 
-  // Reset
+  // Trigger WhatsApp popup if phone number was provided
+  if (phone) {
+    const due = total - paid;
+    let msg = `🎉 *Booking Confirmed!*\\n\\nHello ${name},\\nYour booking for *${event}* on *${fmtDate(date)}* is confirmed.\\n\\n`;
+    msg += `💰 *Total Amount:* ${fmtMoney(total)}\\n`;
+    msg += `✅ *Advance Paid:* ${fmtMoney(paid)}\\n`;
+    if (due > 0) {
+      msg += `⏳ *Balance Due:* ${fmtMoney(due)}\\n\\nThank you!`;
+    } else {
+      msg += `✨ *Fully Paid!*\\n\\nThank you!`;
+    }
+    
+    setTimeout(() => {
+      if (confirm(`Do you want to send a WhatsApp confirmation to ${name}?`)) {
+        sendWhatsApp(phone, msg);
+      }
+    }, 500); // small delay to let toast show up first
+  }
+
   ['addName','addPhone','addDate','addEndDate','addTotal','addNotes'].forEach(id => document.getElementById(id).value='');
   document.getElementById('addAdvance').value='0';
   document.getElementById('addEvent').value='';
@@ -558,8 +620,27 @@ function savePayment() {
   b.paid = (b.paid||0) + amt;
   save(); closeModal();
   showToast(`✅ ${fmtMoney(amt)} payment recorded!`);
+  
   if (document.getElementById('panel-payments').classList.contains('active')) renderPayments();
   if (document.getElementById('panel-bookings').classList.contains('active')) renderBookings();
+
+  // Trigger WhatsApp popup if phone number exists
+  if (b.phone) {
+    const newDue = (b.total||0) - (b.paid||0);
+    let msg = `💳 *Payment Received!*\\n\\nHello ${b.name},\\nWe have received your payment of *${fmtMoney(amt)}* for the ${b.event}.\\n\\n`;
+    msg += `✅ *Total Paid so far:* ${fmtMoney(b.paid)}\\n`;
+    if (newDue > 0) {
+      msg += `⏳ *Balance Due:* ${fmtMoney(newDue)}\\n\\nThank you!`;
+    } else {
+      msg += `✨ *Your account is Fully Paid!*\\n\\nThank you!`;
+    }
+    
+    setTimeout(() => {
+      if (confirm(`Send a WhatsApp payment receipt to ${b.name}?`)) {
+        sendWhatsApp(b.phone, msg);
+      }
+    }, 500);
+  }
 }
 
 /* ---- DELETE MODAL ---- */
@@ -577,6 +658,42 @@ function confirmDelete() {
 
 function closeModal() {
   document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));
+}
+
+/* ---- BACKUP AND RESTORE ---- */
+function exportData() {
+  if (bookings.length === 0) { showToast('⚠️ No data to backup'); return; }
+  const dataStr = JSON.stringify(bookings, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hall_bookings_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📥 Backup file downloaded!');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const importedData = JSON.parse(e.target.result);
+      if (Array.isArray(importedData)) {
+        bookings = importedData;
+        save();
+        showToast('✅ Data restored successfully!');
+      } else {
+        showToast('❌ Invalid backup file format!');
+      }
+    } catch (err) {
+      showToast('❌ Error reading file!');
+    }
+    event.target.value = ''; 
+  };
+  reader.readAsText(file);
 }
 
 /* ---- TOAST ---- */
