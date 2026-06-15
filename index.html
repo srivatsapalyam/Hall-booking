@@ -109,10 +109,7 @@
     font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
     cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; justify-content:center;
   }
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold), var(--gold-dim));
-    color: var(--dark); width:100%;
-  }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: var(--dark); width:100%; }
   .btn-gold:hover { filter:brightness(1.1); }
   .btn-sm { padding:7px 12px; font-size:12px; border-radius:8px; }
   .btn-ghost { background:var(--dark3); color:var(--cream2); border:1px solid var(--dark4); }
@@ -133,40 +130,36 @@
   }
   .mic-btn:hover { background: #c9a84c44; transform: scale(1.05); }
   .mic-btn.listening { background: #e74c3c; color: white; border-color: #e74c3c; animation: pulse 1.5s infinite; }
-  
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
-    70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
-  }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); } 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); } }
 
   /* STATUS BADGE */
-  .badge {
-    display:inline-flex; align-items:center; gap:5px;
-    padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600;
-  }
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; }
   .badge-free { background:#27ae6020; color:#2ecc71; border:1px solid #27ae6040; }
   .badge-booked { background:#c0392b20; color:#e74c3c; border:1px solid #c0392b40; }
   .badge-paid { background:#27ae6020; color:#2ecc71; border:1px solid #27ae6040; }
   .badge-partial { background:#e67e2220; color:#f39c12; border:1px solid #e67e2240; }
   .badge-unpaid { background:#c0392b20; color:#e74c3c; border:1px solid #c0392b40; }
 
-  /* AVAILABILITY RESULT */
-  .avail-result {
-    border-radius:var(--radius); padding:20px; text-align:center;
-    margin-top:16px; display:none;
+  /* CALENDAR STYLES */
+  .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .cal-header button { background:var(--dark3); border:1px solid var(--dark4); color:var(--cream); border-radius:8px; padding:6px 12px; cursor:pointer; }
+  .cal-header h3 { font-family:'Playfair Display',serif; color:var(--gold-light); font-size:18px; }
+  .cal-days-row { display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; margin-bottom:8px; text-align:center; font-size:11px; color:#888; font-weight:600; text-transform:uppercase; }
+  .cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; }
+  .cal-cell { 
+    background:var(--dark3); border:1px solid var(--dark4); border-radius:8px; 
+    padding:10px 4px; text-align:center; font-size:14px; cursor:pointer; transition:transform 0.2s;
+    display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:50px;
   }
-  .avail-result.free { background:#27ae6015; border:1.5px solid #27ae6050; }
-  .avail-result.booked { background:#c0392b15; border:1.5px solid #c0392b50; }
-  .avail-result .icon { font-size:36px; margin-bottom:8px; }
-  .avail-result .status-text { font-family:'Playfair Display',serif; font-size:20px; }
-  .avail-result .detail { font-size:13px; color:#aaa; margin-top:6px; line-height:1.6; }
+  .cal-cell:hover { transform:scale(1.05); }
+  .cal-cell.empty { background:transparent; border-color:transparent; cursor:default; }
+  .cal-cell.free { background:#27ae6015; border-color:#27ae6050; color:#2ecc71; }
+  .cal-cell.booked { background:#c0392b15; border-color:#c0392b50; color:#e74c3c; font-weight:bold; }
+  .cal-dot { width:6px; height:6px; border-radius:50%; margin-top:4px; }
+  .cal-dot.booked { background:#e74c3c; }
 
   /* BOOKING LIST */
-  .booking-item {
-    background:var(--dark3); border:1px solid var(--dark4);
-    border-radius:12px; padding:15px; margin-bottom:10px;
-  }
+  .booking-item { background:var(--dark3); border:1px solid var(--dark4); border-radius:12px; padding:15px; margin-bottom:10px; }
   .booking-item-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
   .booking-name { font-weight:600; font-size:15px; color:var(--cream); }
   .booking-event { font-size:12px; color:#888; margin-top:2px; }
@@ -179,10 +172,7 @@
 
   /* PAYMENT SUMMARY */
   .stat-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
-  .stat-box {
-    background:var(--dark3); border:1px solid var(--dark4);
-    border-radius:12px; padding:14px; text-align:center;
-  }
+  .stat-box { background:var(--dark3); border:1px solid var(--dark4); border-radius:12px; padding:14px; text-align:center; }
   .stat-box .stat-val { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; }
   .stat-box .stat-label { font-size:11px; color:#888; margin-top:3px; }
   .stat-box.green .stat-val { color:#2ecc71; }
@@ -194,39 +184,22 @@
   .progress-fill { height:100%; background:linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius:3px; transition:width .4s; }
 
   /* MODAL */
-  .modal-overlay {
-    position:fixed; inset:0; background:#00000088; z-index:200;
-    display:none; align-items:center; justify-content:center; padding:16px;
-  }
+  .modal-overlay { position:fixed; inset:0; background:#000000bb; z-index:200; display:none; align-items:center; justify-content:center; padding:16px; }
   .modal-overlay.open { display:flex; }
-  .modal {
-    background:var(--dark2); border:1px solid var(--dark4);
-    border-radius:var(--radius); padding:22px; width:100%; max-width:380px;
-  }
+  .modal { background:var(--dark2); border:1px solid var(--dark4); border-radius:var(--radius); padding:22px; width:100%; max-width:380px; }
   .modal-title { font-family:'Playfair Display',serif; color:var(--gold-light); font-size:17px; margin-bottom:16px; }
   .modal-actions { display:flex; gap:10px; margin-top:18px; }
   .modal-actions .btn { flex:1; }
 
   /* TOAST */
-  .toast {
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
-    background:var(--dark3); border:1px solid var(--gold-dim);
-    color:var(--cream); padding:12px 22px; border-radius:30px;
-    font-size:14px; font-weight:500; z-index:300;
-    transition:transform .3s; white-space:nowrap;
-  }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--dark3); border:1px solid var(--gold-dim); color:var(--cream); padding:12px 22px; border-radius:30px; font-size:14px; font-weight:500; z-index:300; transition:transform .3s; white-space:nowrap; }
   .toast.show { transform:translateX(-50%) translateY(0); }
 
-  /* EMPTY STATE */
+  /* EMPTY STATE & SECTION DIVIDER */
   .empty { text-align:center; padding:40px 20px; color:#555; }
   .empty .empty-icon { font-size:40px; margin-bottom:12px; }
   .empty p { font-size:14px; }
-
-  /* SECTION DIVIDER */
-  .section-label {
-    font-size:11px; color:var(--gold-dim); text-transform:uppercase;
-    letter-spacing:1.5px; font-weight:600; margin:18px 0 10px;
-  }
+  .section-label { font-size:11px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:600; margin:18px 0 10px; }
 </style>
 </head>
 <body>
@@ -240,10 +213,10 @@
     </div>
   </div>
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('check')">🔍 Check Date</button>
-    <button class="tab" onclick="switchTab('bookings')">📋 All Bookings</button>
+    <button class="tab active" onclick="switchTab('calendar')">🗓️ Calendar</button>
+    <button class="tab" onclick="switchTab('bookings')">📋 Bookings</button>
     <button class="tab" onclick="switchTab('payments')">💰 Payments</button>
-    <button class="tab" onclick="switchTab('add')">➕ Add Booking</button>
+    <button class="tab" onclick="switchTab('add')">➕ Add</button>
     <button class="tab" onclick="switchTab('enquiry')">👋 Enquiry</button>
     <button class="tab" onclick="switchTab('data')">⚙️ Data</button>
   </div>
@@ -251,15 +224,23 @@
 
 <div class="main">
 
-  <div class="panel active" id="panel-check">
+  <div class="panel active" id="panel-calendar">
     <div class="card">
-      <div class="card-title">📅 Check Hall Availability</div>
-      <div class="form-group">
-        <label>Select Date</label>
-        <input type="date" id="checkDate" oninput="checkAvailability()">
+      <div class="cal-header">
+        <button onclick="changeMonth(-1)">◀ Prev</button>
+        <h3 id="calMonthYear">Month Year</h3>
+        <button onclick="changeMonth(1)">Next ▶</button>
+      </div>
+      <div class="cal-days-row">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="cal-grid" id="calendarGrid"></div>
+      
+      <div style="display:flex; justify-content:center; gap:16px; margin-top:16px; font-size:12px; color:#888;">
+        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:#e74c3c; border-radius:50%;"></div> Booked</span>
+        <span style="display:flex; align-items:center; gap:4px;"><div style="width:10px; height:10px; background:#2ecc71; border-radius:50%;"></div> Free</span>
       </div>
     </div>
-    <div class="avail-result" id="availResult"></div>
   </div>
 
   <div class="panel" id="panel-bookings">
@@ -267,6 +248,9 @@
       <input type="text" id="searchBox" placeholder="🔍 Search by name or event…" oninput="renderBookings()" style="background:var(--dark3); flex:1;">
       <button class="mic-btn" id="mic-searchBox" onclick="startDictation('searchBox')" title="Voice Search">🎤</button>
     </div>
+    
+    <div id="marketingSection"></div>
+    
     <div id="bookingsList"></div>
   </div>
 
@@ -382,14 +366,10 @@
     <div class="card">
       <div class="card-title">💾 Backup & Restore Data</div>
       <p style="font-size:13px; color:#aaa; margin-bottom:16px; line-height:1.5;">
-        Save your customer data to your device, or load an existing backup. Use this before updating the app to ensure no data is lost.
+        Save your customer data to your device, or load an existing backup.
       </p>
-      
       <div class="form-group">
-        <button class="btn btn-ghost" onclick="exportData()" style="width:100%; margin-bottom:10px;">
-          📥 Download Backup File
-        </button>
-        
+        <button class="btn btn-ghost" onclick="exportData()" style="width:100%; margin-bottom:10px;">📥 Download Backup File</button>
         <label class="btn btn-ghost" style="width:100%; text-align:center; cursor:pointer;">
           📤 Upload Backup File
           <input type="file" accept=".json" style="display:none" onchange="importData(event)">
@@ -400,11 +380,19 @@
 
 </div>
 
+<div class="modal-overlay" id="calModal">
+  <div class="modal" style="border: 2px solid var(--gold-light);">
+    <div class="modal-title" id="calModalTitle">Date Info</div>
+    <div id="calModalContent" style="margin-bottom:16px; font-size:14px; line-height:1.5;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="reminderModal">
   <div class="modal" style="border: 2px solid var(--gold-light);">
-    <div class="modal-title" style="display:flex; align-items:center; gap:8px; font-size:19px;">
-      🔔 Upcoming Events!
-    </div>
+    <div class="modal-title" style="display:flex; align-items:center; gap:8px; font-size:19px;">🔔 Upcoming Events!</div>
     <div id="reminderContent" style="margin-bottom:16px;"></div>
     <div class="modal-actions">
       <button class="btn btn-gold" onclick="closeModal()">👍 Got it</button>
@@ -445,8 +433,11 @@ const STORE_KEY = 'hallBookings_v2';
 let bookings = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
 let editingId = null;
 
-function save() { localStorage.setItem(STORE_KEY, JSON.stringify(bookings)); }
+// Calendar Variables
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
 
+function save() { localStorage.setItem(STORE_KEY, JSON.stringify(bookings)); }
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
 function fmtDate(d) {
@@ -455,7 +446,6 @@ function fmtDate(d) {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
 }
-
 function fmtMoney(n) { return '₹' + Number(n||0).toLocaleString('en-IN'); }
 
 function payStatus(b) {
@@ -464,36 +454,168 @@ function payStatus(b) {
   if ((b.paid||0) > 0) return 'partial';
   return 'unpaid';
 }
-
 function payLabel(b) {
   const s = payStatus(b);
   const labels = { paid:'Fully Paid', partial:'Partial', unpaid:'Unpaid' };
   return labels[s];
 }
 
+/* ---- CALENDAR LOGIC ---- */
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMonthYear').textContent = `${months[calMonth]} ${calYear}`;
+  
+  const grid = document.getElementById('calendarGrid');
+  grid.innerHTML = '';
+  
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  
+  // Empty offset cells
+  for (let i = 0; i < firstDay; i++) {
+    const emptyCell = document.createElement('div');
+    emptyCell.className = 'cal-cell empty';
+    grid.appendChild(emptyCell);
+  }
+  
+  // Day cells
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement('div');
+    const dayStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    
+    // Check if booked
+    const hits = bookings.filter(b => {
+      const end = b.endDate || b.date;
+      return dayStr >= b.date && dayStr <= end;
+    });
+
+    if (hits.length > 0) {
+      cell.className = 'cal-cell booked';
+      cell.innerHTML = `${d}<div class="cal-dot booked"></div>`;
+      cell.onclick = () => openCalModal(dayStr, hits);
+    } else {
+      cell.className = 'cal-cell free';
+      cell.innerHTML = `${d}`;
+      cell.onclick = () => {
+        // Switch to Add Booking and prefill date
+        document.getElementById('addDate').value = dayStr;
+        switchTab('add');
+        showToast('✅ Date selected for new booking');
+      };
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function changeMonth(step) {
+  calMonth += step;
+  if(calMonth < 0) { calMonth = 11; calYear--; }
+  if(calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function openCalModal(dateStr, hits) {
+  document.getElementById('calModalTitle').textContent = `📅 ${fmtDate(dateStr)}`;
+  let html = '';
+  hits.forEach(b => {
+    const due = (b.total||0)-(b.paid||0);
+    const dueStr = due > 0 ? `<span style="color:#e74c3c;font-weight:bold;">Due: ${fmtMoney(due)}</span>` : `<span style="color:#2ecc71;font-weight:bold;">Fully Paid ✓</span>`;
+    html += `
+      <div style="background:var(--dark3); border:1px solid var(--gold-dim); padding:12px; border-radius:8px; margin-bottom:10px;">
+        <strong style="color:var(--cream); font-size:16px;">${b.name}</strong><br>
+        <span style="color:#aaa;">${b.event}</span><br>
+        <div style="margin-top:6px;">${dueStr}</div>
+        ${b.phone ? `<div style="margin-top:6px;">📞 ${b.phone}</div>` : ''}
+      </div>
+    `;
+  });
+  document.getElementById('calModalContent').innerHTML = html;
+  document.getElementById('calModal').classList.add('open');
+}
+
+
+/* ---- MARKETING REMINDERS LOGIC ---- */
+function renderMarketingReminders() {
+  const container = document.getElementById('marketingSection');
+  container.innerHTML = '';
+  
+  const today = new Date();
+  
+  // Calculate Target Month (1 month from now)
+  const targetDate = new Date();
+  targetDate.setMonth(targetDate.getMonth() + 1);
+  const targetMonthStr = String(targetDate.getMonth() + 1).padStart(2,'0'); // e.g. "07" for July
+  
+  // Find past bookings for Birthdays/Anniversaries that happened in that specific month in previous years
+  const hits = bookings.filter(b => {
+    if (b.event !== 'Birthday Party' && b.event !== 'Anniversary') return false;
+    
+    // b.date is "YYYY-MM-DD"
+    const bYear = parseInt(b.date.substring(0,4));
+    const bMonth = b.date.substring(5,7);
+    
+    // If it's a past year, and the month matches our target month
+    return bYear < targetDate.getFullYear() && bMonth === targetMonthStr;
+  });
+
+  if (hits.length === 0) return;
+
+  let html = `<div class="card" style="background: linear-gradient(135deg, #252219 0%, #302d22 100%); border-color: var(--gold-dim);">
+    <div class="card-title" style="margin-bottom:8px;">🎁 Upcoming Anniversaries & Birthdays</div>
+    <p style="font-size:12px; color:#aaa; margin-bottom:12px;">These customers hosted events with you around this time last year. Send them a message to secure repeat business!</p>`;
+  
+  hits.forEach(b => {
+    html += `
+      <div style="background:var(--dark2); border:1px solid var(--dark4); padding:10px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-weight:bold; color:var(--gold-light); font-size:14px;">${b.name}</div>
+          <div style="font-size:11px; color:#888;">Had a ${b.event} on ${fmtDate(b.date)}</div>
+        </div>
+        ${b.phone ? `<button class="btn btn-sm btn-wa" onclick="sendMarketingWA('${b.id}')">Send Offer</button>` : '<span style="font-size:11px; color:#666;">No Phone</span>'}
+      </div>
+    `;
+  });
+  
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function sendMarketingWA(id) {
+  const b = bookings.find(x=>x.id===id);
+  if(!b || !b.phone) return;
+  
+  const msg = `Hello ${b.name} 👋
+
+It's almost been a year since you celebrated your beautiful *${b.event}* with us at Palyam's Emerald Banquet Hall! 
+
+If you are planning to celebrate again next month, we would love to host you and your family once more. 
+
+Let us know if you'd like us to check dates for you! 
+
+Thank you,
+Palyam's Emerald Management`;
+
+  sendWhatsApp(b.phone, msg);
+}
+
+
 /* ---- SMART APP-OPEN REMINDER ---- */
 function checkDailyReminders() {
   const today = new Date();
-  
-  // Calculate tomorrow
   const tmrw = new Date(today);
   tmrw.setDate(tmrw.getDate() + 1);
 
-  // Convert to 'YYYY-MM-DD' strings for easy comparing
   const todayStr = today.toISOString().slice(0,10);
   const tmrwStr = tmrw.toISOString().slice(0,10);
 
-  // Find events overlapping with today or tomorrow
   const eventsToday = bookings.filter(b => b.date <= todayStr && (b.endDate || b.date) >= todayStr);
   const eventsTmrw = bookings.filter(b => b.date <= tmrwStr && (b.endDate || b.date) >= tmrwStr);
 
   if (eventsToday.length > 0 || eventsTmrw.length > 0) {
-    // Session storage makes sure this only pops up ONCE per session so we don't annoy him
     const lastSeen = sessionStorage.getItem('reminderSeenDate');
-    if (lastSeen === todayStr) return; // He already saw it today during this session
+    if (lastSeen === todayStr) return; 
 
     let html = '';
-    
     if (eventsToday.length > 0) {
       html += `<div style="color:#2ecc71; font-size:12px; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">🚨 Happening Today</div>`;
       eventsToday.forEach(b => {
@@ -520,174 +642,20 @@ function checkDailyReminders() {
   }
 }
 
-/* ---- VOICE DICTATION (SPEECH TO TEXT) ---- */
-function startDictation(targetId) {
-  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    showToast('⚠️ Voice typing is not supported in this browser.');
-    return;
-  }
-
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
-  
-  recognition.lang = 'en-IN'; 
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-
-  const micBtn = document.getElementById('mic-' + targetId);
-  
-  recognition.onstart = function() {
-    micBtn.classList.add('listening');
-    showToast('🎙️ Listening... Speak now');
-  };
-
-  recognition.onresult = function(event) {
-    const transcript = event.results[0][0].transcript;
-    const targetInput = document.getElementById(targetId);
-    
-    if (targetInput.tagName.toLowerCase() === 'textarea' && targetInput.value.trim() !== '' && targetId !== 'enqMessage') {
-      targetInput.value = targetInput.value.trim() + ' ' + transcript;
-    } else {
-      targetInput.value = transcript;
-    }
-
-    if (targetId === 'searchBox') renderBookings();
-    if (targetId === 'enqName') updateEnqMessage(); // Update greeting automatically
-    
-    micBtn.classList.remove('listening');
-    showToast('✅ Text added!');
-  };
-
-  recognition.onerror = function(event) {
-    micBtn.classList.remove('listening');
-    if (event.error === 'not-allowed') {
-      showToast('⚠️ Please allow microphone access.');
-    } else {
-      showToast('⚠️ Voice recognition error.');
-    }
-  };
-
-  recognition.onend = function() {
-    micBtn.classList.remove('listening');
-  };
-
-  recognition.start();
-}
-
-/* ---- WHATSAPP INTEGRATION ---- */
-function sendWhatsApp(phone, message) {
-  if (!phone) return;
-  let cleanPhone = phone.replace(/\D/g, '');
-  if (cleanPhone.length === 10) {
-    cleanPhone = '91' + cleanPhone;
-  }
-  const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank');
-}
-
-function sendReminder(id) {
-  const b = bookings.find(x=>x.id===id);
-  if(!b || !b.phone) return;
-  const due = (b.total||0) - (b.paid||0);
-  
-  let msg = `👋 Hello ${b.name},
-
-This is regarding your booking for *${b.event}* on *${fmtDate(b.date)}*.
-
-`;
-
-  if (due > 0) {
-    msg += `Just a friendly reminder that there is a pending balance of *${fmtMoney(due)}* out of the total ${fmtMoney(b.total)}.
-
-Thank you!`;
-  } else {
-    msg += `Your booking is fully paid. We look forward to hosting your event!`;
-  }
-  
-  sendWhatsApp(b.phone, msg);
-}
-
-/* ---- ENQUIRY FUNCTIONS ---- */
-function updateEnqMessage() {
-  const name = document.getElementById('enqName').value.trim();
-  const greeting = name ? `Hello ${name} 👋` : `Hello 👋`;
-  
-  const template = `${greeting}
-
-Thank you for enquiring about *Palyam's Emerald Banquet AC Hall*!
-
-Our beautiful AC hall comfortably hosts 150-200 people, making it perfect for Birthday Parties, Receptions, and all special occasions. 
-
-✨ *Facilities Include:*
-• Proper Lighting & Luxury Touches
-• Complete Tables & Chairs
-• Buffet Table Services
-• Lift & Generator Backup
-
-📍 *Location:* Chudegowda Badavane, Near GowdaSamaja, Kushalnagar - 571234.
-
-I am attaching a quick video tour of our hall below. Please let me know what date you are looking for, and I can check our availability for you!`;
-
-  document.getElementById('enqMessage').value = template;
-}
-
-function sendEnquiry() {
-  const phone = document.getElementById('enqPhone').value.trim();
-  const msg = document.getElementById('enqMessage').value.trim();
-  
-  if (!phone) {
-    showToast('⚠️ Please enter a WhatsApp number.');
-    return;
-  }
-  
-  sendWhatsApp(phone, msg);
-  showToast('💬 Opening WhatsApp... Remember to attach the video!');
-}
-
-/* ---- TABS ---- */
+/* ---- TABS & RENDERINGS ---- */
 function switchTab(t) {
-  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['check','bookings','payments','add','enquiry','data'][i]===t));
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['calendar','bookings','payments','add','enquiry','data'][i]===t));
   document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
   document.getElementById('panel-'+t).classList.add('active');
+  
+  if (t==='calendar') renderCalendar();
   if (t==='bookings') renderBookings();
   if (t==='payments') renderPayments();
 }
 
-/* ---- CHECK AVAILABILITY ---- */
-function checkAvailability() {
-  const date = document.getElementById('checkDate').value;
-  const el = document.getElementById('availResult');
-  if (!date) { el.style.display='none'; return; }
-  el.style.display='block';
-
-  const hits = bookings.filter(b => {
-    const end = b.endDate || b.date;
-    return date >= b.date && date <= end;
-  });
-
-  if (hits.length === 0) {
-    el.className = 'avail-result free';
-    el.innerHTML = `<div class="icon">✅</div>
-      <div class="status-text" style="color:#2ecc71">Hall is Available!</div>
-      <div class="detail">${fmtDate(date)} is free.<br>You can take a new booking.</div>`;
-  } else {
-    const b = hits[0];
-    const due = (b.total||0)-(b.paid||0);
-    const dueStr = due > 0 ? `<br><span style="color:#e74c3c;font-weight:600">Balance due: ${fmtMoney(due)}</span>` : `<br><span style="color:#2ecc71;font-weight:600">Fully paid ✓</span>`;
-    el.className = 'avail-result booked';
-    el.innerHTML = `<div class="icon">🚫</div>
-      <div class="status-text" style="color:#e74c3c">Hall is Booked!</div>
-      <div class="detail">
-        <strong style="color:var(--cream)">${b.name}</strong> — ${b.event}<br>
-        ${fmtDate(b.date)}${b.endDate && b.endDate!==b.date ? ' to '+fmtDate(b.endDate) : ''}
-        ${dueStr}
-        ${b.phone ? `<br>📞 ${b.phone}` : ''}
-      </div>`;
-  }
-}
-
-/* ---- RENDER BOOKINGS ---- */
 function renderBookings() {
+  renderMarketingReminders(); // Inject the marketing tool at the top
+
   const q = (document.getElementById('searchBox')?.value||'').toLowerCase();
   const el = document.getElementById('bookingsList');
   const list = bookings
@@ -709,34 +677,6 @@ function renderBookings() {
   el.innerHTML = html;
 }
 
-function bookingCard(b) {
-  const due = (b.total||0)-(b.paid||0);
-  const ps = payStatus(b);
-  const badgeClass = 'badge-'+ps;
-  return `<div class="booking-item">
-    <div class="booking-item-header">
-      <div>
-        <div class="booking-name">${b.name}</div>
-        <div class="booking-event">${b.event}${b.phone ? ' · 📞 '+b.phone : ''}</div>
-      </div>
-      <div class="booking-date">${fmtDate(b.date)}${b.endDate&&b.endDate!==b.date?'<br>to '+fmtDate(b.endDate):''}</div>
-    </div>
-    <div class="booking-footer">
-      <div class="amount-info">
-        <span class="badge ${badgeClass}">${payLabel(b)}</span>
-        ${due>0 ? `<span class="amount-due" style="margin-left:8px">Due: ${fmtMoney(due)}</span>` : ''}
-      </div>
-      <div class="booking-actions">
-        ${b.phone ? `<button class="btn btn-sm btn-wa" onclick="sendReminder('${b.id}')" title="Send WhatsApp Reminder">💬</button>` : ''}
-        <button class="btn btn-sm btn-ghost" onclick="openPayModal('${b.id}')">💳</button>
-        <button class="btn btn-sm btn-danger" onclick="openDelModal('${b.id}')">🗑️</button>
-      </div>
-    </div>
-    ${b.notes ? `<div style="font-size:12px;color:#666;margin-top:8px;padding-top:8px;border-top:1px solid var(--dark4)">📝 ${b.notes}</div>` : ''}
-  </div>`;
-}
-
-/* ---- RENDER PAYMENTS ---- */
 function renderPayments() {
   const totalBilled = bookings.reduce((s,b)=>s+(b.total||0),0);
   const totalPaid = bookings.reduce((s,b)=>s+(b.paid||0),0);
@@ -774,6 +714,33 @@ function renderPayments() {
   }).join('');
 }
 
+function bookingCard(b) {
+  const due = (b.total||0)-(b.paid||0);
+  const ps = payStatus(b);
+  const badgeClass = 'badge-'+ps;
+  return `<div class="booking-item">
+    <div class="booking-item-header">
+      <div>
+        <div class="booking-name">${b.name}</div>
+        <div class="booking-event">${b.event}${b.phone ? ' · 📞 '+b.phone : ''}</div>
+      </div>
+      <div class="booking-date">${fmtDate(b.date)}${b.endDate&&b.endDate!==b.date?'<br>to '+fmtDate(b.endDate):''}</div>
+    </div>
+    <div class="booking-footer">
+      <div class="amount-info">
+        <span class="badge ${badgeClass}">${payLabel(b)}</span>
+        ${due>0 ? `<span class="amount-due" style="margin-left:8px">Due: ${fmtMoney(due)}</span>` : ''}
+      </div>
+      <div class="booking-actions">
+        ${b.phone ? `<button class="btn btn-sm btn-wa" onclick="sendReminder('${b.id}')" title="Send WhatsApp Reminder">💬</button>` : ''}
+        <button class="btn btn-sm btn-ghost" onclick="openPayModal('${b.id}')">💳</button>
+        <button class="btn btn-sm btn-danger" onclick="openDelModal('${b.id}')">🗑️</button>
+      </div>
+    </div>
+    ${b.notes ? `<div style="font-size:12px;color:#666;margin-top:8px;padding-top:8px;border-top:1px solid var(--dark4)">📝 ${b.notes}</div>` : ''}
+  </div>`;
+}
+
 /* ---- ADD BOOKING ---- */
 function addBooking() {
   const name = document.getElementById('addName').value.trim();
@@ -793,7 +760,6 @@ function addBooking() {
     return date <= bEnd && newEnd >= b.date;
   });
   if (conflict) { showToast(`⚠️ Date conflict with ${conflict.name}'s booking!`); return; }
-
   if (paid > total) { showToast('⚠️ Advance cannot exceed total amount'); return; }
 
   bookings.push({ id:uid(), name, phone, event, date, endDate:endDate||date, total, paid, notes });
@@ -802,45 +768,28 @@ function addBooking() {
 
   if (phone) {
     const due = total - paid;
-    let msg = `🎉 *Booking Confirmed!*
-
-Hello ${name},
-Your booking for *${event}* on *${fmtDate(date)}* is confirmed.
-
-💰 *Total Amount:* ${fmtMoney(total)}
-✅ *Advance Paid:* ${fmtMoney(paid)}
-`;
-
-    if (due > 0) {
-      msg += `⏳ *Balance Due:* ${fmtMoney(due)}
-
-Thank you!`;
-    } else {
-      msg += `✨ *Fully Paid!*
-
-Thank you!`;
-    }
+    let msg = `🎉 *Booking Confirmed!*\n\nHello ${name},\nYour booking for *${event}* on *${fmtDate(date)}* is confirmed.\n\n💰 *Total Amount:* ${fmtMoney(total)}\n✅ *Advance Paid:* ${fmtMoney(paid)}\n`;
+    if (due > 0) msg += `⏳ *Balance Due:* ${fmtMoney(due)}\n\nThank you!`;
+    else msg += `✨ *Fully Paid!*\n\nThank you!`;
     
     setTimeout(() => {
-      if (confirm(`Do you want to send a WhatsApp confirmation to ${name}?`)) {
-        sendWhatsApp(phone, msg);
-      }
+      if (confirm(`Do you want to send a WhatsApp confirmation to ${name}?`)) sendWhatsApp(phone, msg);
     }, 500); 
   }
 
   ['addName','addPhone','addDate','addEndDate','addTotal','addNotes'].forEach(id => document.getElementById(id).value='');
   document.getElementById('addAdvance').value='0';
   document.getElementById('addEvent').value='';
+  renderCalendar(); // Update calendar colors
 }
 
-/* ---- PAYMENT MODAL ---- */
+/* ---- PAYMENT & DELETE MODALS ---- */
 function openPayModal(id) {
   editingId = id;
   const b = bookings.find(x=>x.id===id);
   if (!b) return;
   const due = (b.total||0)-(b.paid||0);
-  document.getElementById('payModalInfo').innerHTML =
-    `<strong>${b.name}</strong> — ${b.event}<br>Total: ${fmtMoney(b.total)} | Paid: ${fmtMoney(b.paid||0)} | <span class="amount-due">Due: ${fmtMoney(due)}</span>`;
+  document.getElementById('payModalInfo').innerHTML = `<strong>${b.name}</strong> — ${b.event}<br>Total: ${fmtMoney(b.total)} | Paid: ${fmtMoney(b.paid||0)} | <span class="amount-due">Due: ${fmtMoney(due)}</span>`;
   document.getElementById('payAmount').value = '';
   document.getElementById('payModal').classList.add('open');
 }
@@ -861,33 +810,14 @@ function savePayment() {
 
   if (b.phone) {
     const newDue = (b.total||0) - (b.paid||0);
-    let msg = `💳 *Payment Received!*
-
-Hello ${b.name},
-We have received your payment of *${fmtMoney(amt)}* for the ${b.event}.
-
-✅ *Total Paid so far:* ${fmtMoney(b.paid)}
-`;
-
-    if (newDue > 0) {
-      msg += `⏳ *Balance Due:* ${fmtMoney(newDue)}
-
-Thank you!`;
-    } else {
-      msg += `✨ *Your account is Fully Paid!*
-
-Thank you!`;
-    }
+    let msg = `💳 *Payment Received!*\n\nHello ${b.name},\nWe have received your payment of *${fmtMoney(amt)}* for the ${b.event}.\n\n✅ *Total Paid so far:* ${fmtMoney(b.paid)}\n`;
+    if (newDue > 0) msg += `⏳ *Balance Due:* ${fmtMoney(newDue)}\n\nThank you!`;
+    else msg += `✨ *Your account is Fully Paid!*\n\nThank you!`;
     
-    setTimeout(() => {
-      if (confirm(`Send a WhatsApp payment receipt to ${b.name}?`)) {
-        sendWhatsApp(b.phone, msg);
-      }
-    }, 500);
+    setTimeout(() => { if (confirm(`Send a WhatsApp payment receipt to ${b.name}?`)) sendWhatsApp(b.phone, msg); }, 500);
   }
 }
 
-/* ---- DELETE MODAL ---- */
 function openDelModal(id) {
   editingId = id;
   document.getElementById('delModal').classList.add('open');
@@ -898,61 +828,91 @@ function confirmDelete() {
   save(); closeModal();
   showToast('🗑️ Booking deleted');
   renderBookings();
+  renderCalendar(); // Update calendar colors
 }
 
-function closeModal() {
-  document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));
+function closeModal() { document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open')); }
+
+/* ---- VOICE & UTILS ---- */
+function startDictation(targetId) {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { showToast('⚠️ Voice typing is not supported.'); return; }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-IN'; recognition.interimResults = false; recognition.maxAlternatives = 1;
+  const micBtn = document.getElementById('mic-' + targetId);
+  
+  recognition.onstart = function() { micBtn.classList.add('listening'); showToast('🎙️ Listening... Speak now'); };
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    const targetInput = document.getElementById(targetId);
+    if (targetInput.tagName.toLowerCase() === 'textarea' && targetInput.value.trim() !== '' && targetId !== 'enqMessage') targetInput.value = targetInput.value.trim() + ' ' + transcript;
+    else targetInput.value = transcript;
+    
+    if (targetId === 'searchBox') renderBookings();
+    if (targetId === 'enqName') updateEnqMessage();
+    micBtn.classList.remove('listening'); showToast('✅ Text added!');
+  };
+  recognition.onerror = function(event) { micBtn.classList.remove('listening'); showToast('⚠️ Voice recognition error.'); };
+  recognition.onend = function() { micBtn.classList.remove('listening'); };
+  recognition.start();
 }
 
-/* ---- BACKUP AND RESTORE ---- */
+function sendWhatsApp(phone, message) {
+  if (!phone) return;
+  let cleanPhone = phone.replace(/\D/g, '');
+  if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+  window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+/* ---- ENQUIRY ---- */
+function updateEnqMessage() {
+  const name = document.getElementById('enqName').value.trim();
+  const greeting = name ? `Hello ${name} 👋` : `Hello 👋`;
+  const template = `${greeting}\n\nThank you for enquiring about *Palyam's Emerald Banquet AC Hall*!\n\nOur beautiful AC hall comfortably hosts 150-200 people, making it perfect for Birthday Parties, Receptions, and all special occasions.\n\n✨ *Facilities Include:*\n• Proper Lighting & Luxury Touches\n• Complete Tables & Chairs\n• Buffet Table Services\n• Lift & Generator Backup\n\n📍 *Location:* Chudegowda Badavane, Near GowdaSamaja, Kushalnagar - 571234.\n\nI am attaching a quick video tour of our hall below. Please let me know what date you are looking for, and I can check our availability for you!`;
+  document.getElementById('enqMessage').value = template;
+}
+function sendEnquiry() {
+  const phone = document.getElementById('enqPhone').value.trim();
+  const msg = document.getElementById('enqMessage').value.trim();
+  if (!phone) { showToast('⚠️ Please enter a WhatsApp number.'); return; }
+  sendWhatsApp(phone, msg);
+  showToast('💬 Opening WhatsApp... Remember to attach the video!');
+}
+
+/* ---- DATA IMPORT/EXPORT ---- */
 function exportData() {
   if (bookings.length === 0) { showToast('⚠️ No data to backup'); return; }
   const dataStr = JSON.stringify(bookings, null, 2);
   const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `hall_bookings_backup_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('📥 Backup file downloaded!');
+  a.href = url; a.download = `hall_bookings_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(url); showToast('📥 Backup file downloaded!');
 }
-
 function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const importedData = JSON.parse(e.target.result);
-      if (Array.isArray(importedData)) {
-        bookings = importedData;
-        save();
-        showToast('✅ Data restored successfully!');
-      } else {
-        showToast('❌ Invalid backup file format!');
-      }
-    } catch (err) {
-      showToast('❌ Error reading file!');
-    }
+      if (Array.isArray(importedData)) { bookings = importedData; save(); showToast('✅ Data restored successfully!'); renderCalendar(); }
+      else showToast('❌ Invalid backup file format!');
+    } catch (err) { showToast('❌ Error reading file!'); }
     event.target.value = ''; 
   };
   reader.readAsText(file);
 }
 
-/* ---- TOAST ---- */
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
-// Initialize things
-document.getElementById('checkDate').value = new Date().toISOString().slice(0,10);
-updateEnqMessage(); // set initial enquiry text
-checkAvailability();
-checkDailyReminders(); // TRIGGER THE SMART POPUP ON LOAD
+// Initialize
+updateEnqMessage();
+renderCalendar();
+checkDailyReminders();
 </script>
 </body>
 </html>
