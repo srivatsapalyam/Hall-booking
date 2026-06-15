@@ -244,6 +244,7 @@
     <button class="tab" onclick="switchTab('bookings')">📋 All Bookings</button>
     <button class="tab" onclick="switchTab('payments')">💰 Payments</button>
     <button class="tab" onclick="switchTab('add')">➕ Add Booking</button>
+    <button class="tab" onclick="switchTab('enquiry')">👋 Enquiry</button>
     <button class="tab" onclick="switchTab('data')">⚙️ Data</button>
   </div>
 </div>
@@ -344,6 +345,39 @@
     </div>
   </div>
 
+  <div class="panel" id="panel-enquiry">
+    <div class="card">
+      <div class="card-title">👋 Send Hall Details</div>
+      <p style="font-size:13px; color:#aaa; margin-bottom:16px; line-height:1.5;">
+        Send a professional greeting to a new customer. <strong>Note:</strong> You will need to manually attach the video from your phone's gallery once WhatsApp opens.
+      </p>
+      
+      <div class="form-group">
+        <div class="label-wrap">
+          <label>Customer Name</label>
+          <button class="mic-btn" id="mic-enqName" onclick="startDictation('enqName')" title="Voice Type">🎤</button>
+        </div>
+        <input type="text" id="enqName" placeholder="e.g. Sanjay" oninput="updateEnqMessage()">
+      </div>
+      
+      <div class="form-group">
+        <div class="label-wrap">
+          <label>WhatsApp Number (10 digits) *</label>
+        </div>
+        <input type="tel" id="enqPhone" placeholder="e.g. 9876543210">
+      </div>
+      
+      <div class="form-group">
+        <div class="label-wrap">
+          <label>Message</label>
+        </div>
+        <textarea id="enqMessage" rows="12" style="font-size:13px; line-height:1.5;"></textarea>
+      </div>
+      
+      <button class="btn btn-wa" onclick="sendEnquiry()" style="width:100%; margin-top:10px;">💬 Open in WhatsApp</button>
+    </div>
+  </div>
+
   <div class="panel" id="panel-data">
     <div class="card">
       <div class="card-title">💾 Backup & Restore Data</div>
@@ -427,7 +461,6 @@ function payLabel(b) {
 
 /* ---- VOICE DICTATION (SPEECH TO TEXT) ---- */
 function startDictation(targetId) {
-  // Check if browser supports speech recognition
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
     showToast('⚠️ Voice typing is not supported in this browser.');
     return;
@@ -436,7 +469,6 @@ function startDictation(targetId) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = new SpeechRecognition();
   
-  // Optimized for Indian English accents/names
   recognition.lang = 'en-IN'; 
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
@@ -452,17 +484,14 @@ function startDictation(targetId) {
     const transcript = event.results[0][0].transcript;
     const targetInput = document.getElementById(targetId);
     
-    // If it's a text area (like Notes), add a space and append. Otherwise, replace.
-    if (targetInput.tagName.toLowerCase() === 'textarea' && targetInput.value.trim() !== '') {
+    if (targetInput.tagName.toLowerCase() === 'textarea' && targetInput.value.trim() !== '' && targetId !== 'enqMessage') {
       targetInput.value = targetInput.value.trim() + ' ' + transcript;
     } else {
       targetInput.value = transcript;
     }
 
-    // If searching, trigger the search automatically
-    if (targetId === 'searchBox') {
-      renderBookings();
-    }
+    if (targetId === 'searchBox') renderBookings();
+    if (targetId === 'enqName') updateEnqMessage(); // Update greeting automatically
     
     micBtn.classList.remove('listening');
     showToast('✅ Text added!');
@@ -471,9 +500,9 @@ function startDictation(targetId) {
   recognition.onerror = function(event) {
     micBtn.classList.remove('listening');
     if (event.error === 'not-allowed') {
-      showToast('⚠️ Please allow microphone access in your browser.');
+      showToast('⚠️ Please allow microphone access.');
     } else {
-      showToast('⚠️ Voice recognition error. Try again.');
+      showToast('⚠️ Voice recognition error.');
     }
   };
 
@@ -517,9 +546,46 @@ Thank you!`;
   sendWhatsApp(b.phone, msg);
 }
 
+/* ---- ENQUIRY FUNCTIONS ---- */
+function updateEnqMessage() {
+  const name = document.getElementById('enqName').value.trim();
+  const greeting = name ? `Hello ${name} 👋` : `Hello 👋`;
+  
+  const template = `${greeting}
+
+Thank you for enquiring about *Palyam's Emerald Banquet AC Hall*!
+
+Our beautiful AC hall comfortably hosts 150-200 people, making it perfect for Birthday Parties, Receptions, and all special occasions. 
+
+✨ *Facilities Include:*
+• Proper Lighting & Luxury Touches
+• Complete Tables & Chairs
+• Buffet Table Services
+• Lift & Generator Backup
+
+📍 *Location:* Chudegowda Badavane, Near GowdaSamaja, Kushalnagar - 571234.
+
+I am attaching a quick video tour of our hall below. Please let me know what date you are looking for, and I can check our availability for you!`;
+
+  document.getElementById('enqMessage').value = template;
+}
+
+function sendEnquiry() {
+  const phone = document.getElementById('enqPhone').value.trim();
+  const msg = document.getElementById('enqMessage').value.trim();
+  
+  if (!phone) {
+    showToast('⚠️ Please enter a WhatsApp number.');
+    return;
+  }
+  
+  sendWhatsApp(phone, msg);
+  showToast('💬 Opening WhatsApp... Remember to attach the video!');
+}
+
 /* ---- TABS ---- */
 function switchTab(t) {
-  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['check','bookings','payments','add','data'][i]===t));
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['check','bookings','payments','add','enquiry','data'][i]===t));
   document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
   document.getElementById('panel-'+t).classList.add('active');
   if (t==='bookings') renderBookings();
@@ -821,8 +887,9 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'), 3000);
 }
 
-// Set today as default check date
+// Initialize things
 document.getElementById('checkDate').value = new Date().toISOString().slice(0,10);
+updateEnqMessage(); // set initial enquiry text
 checkAvailability();
 </script>
 </body>
