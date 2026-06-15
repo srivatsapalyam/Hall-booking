@@ -400,6 +400,18 @@
 
 </div>
 
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal" style="border: 2px solid var(--gold-light);">
+    <div class="modal-title" style="display:flex; align-items:center; gap:8px; font-size:19px;">
+      🔔 Upcoming Events!
+    </div>
+    <div id="reminderContent" style="margin-bottom:16px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" onclick="closeModal()">👍 Got it</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="payModal">
   <div class="modal">
     <div class="modal-title">💳 Update Payment</div>
@@ -457,6 +469,55 @@ function payLabel(b) {
   const s = payStatus(b);
   const labels = { paid:'Fully Paid', partial:'Partial', unpaid:'Unpaid' };
   return labels[s];
+}
+
+/* ---- SMART APP-OPEN REMINDER ---- */
+function checkDailyReminders() {
+  const today = new Date();
+  
+  // Calculate tomorrow
+  const tmrw = new Date(today);
+  tmrw.setDate(tmrw.getDate() + 1);
+
+  // Convert to 'YYYY-MM-DD' strings for easy comparing
+  const todayStr = today.toISOString().slice(0,10);
+  const tmrwStr = tmrw.toISOString().slice(0,10);
+
+  // Find events overlapping with today or tomorrow
+  const eventsToday = bookings.filter(b => b.date <= todayStr && (b.endDate || b.date) >= todayStr);
+  const eventsTmrw = bookings.filter(b => b.date <= tmrwStr && (b.endDate || b.date) >= tmrwStr);
+
+  if (eventsToday.length > 0 || eventsTmrw.length > 0) {
+    // Session storage makes sure this only pops up ONCE per session so we don't annoy him
+    const lastSeen = sessionStorage.getItem('reminderSeenDate');
+    if (lastSeen === todayStr) return; // He already saw it today during this session
+
+    let html = '';
+    
+    if (eventsToday.length > 0) {
+      html += `<div style="color:#2ecc71; font-size:12px; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px;">🚨 Happening Today</div>`;
+      eventsToday.forEach(b => {
+        html += `<div style="background:var(--dark3); border:1px solid #27ae6055; padding:10px; border-radius:8px; margin-bottom:12px;">
+                   <div style="font-weight:bold; color:var(--cream);">${b.name}</div>
+                   <div style="font-size:13px; color:#aaa;">${b.event}</div>
+                 </div>`;
+      });
+    }
+
+    if (eventsTmrw.length > 0) {
+      html += `<div style="color:var(--gold-light); font-size:12px; font-weight:bold; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; margin-top:16px;">📅 Coming Up Tomorrow</div>`;
+      eventsTmrw.forEach(b => {
+        html += `<div style="background:var(--dark3); border:1px solid var(--gold-dim); padding:10px; border-radius:8px; margin-bottom:12px;">
+                   <div style="font-weight:bold; color:var(--cream);">${b.name}</div>
+                   <div style="font-size:13px; color:#aaa;">${b.event}</div>
+                 </div>`;
+      });
+    }
+
+    document.getElementById('reminderContent').innerHTML = html;
+    document.getElementById('reminderModal').classList.add('open');
+    sessionStorage.setItem('reminderSeenDate', todayStr);
+  }
 }
 
 /* ---- VOICE DICTATION (SPEECH TO TEXT) ---- */
@@ -891,6 +952,7 @@ function showToast(msg) {
 document.getElementById('checkDate').value = new Date().toISOString().slice(0,10);
 updateEnqMessage(); // set initial enquiry text
 checkAvailability();
+checkDailyReminders(); // TRIGGER THE SMART POPUP ON LOAD
 </script>
 </body>
 </html>
